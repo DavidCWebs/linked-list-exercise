@@ -5,13 +5,18 @@ int main()
 {
     NODE *head = malloc(sizeof(NODE));
     head = NULL;
-    appendNode(&head, createNode("Burgers"));
-    appendNode(&head, createNode("Tequila"));
-    appendNodeAlt(&head, createNode("Zuccini"));
-    appendNodeAlt(&head, createNode("Bananas"));
-    prependNode(&head, createNode("Avocados"));
-    prependNode(&head, createNode("Beer"));
-    insertAlphabetically(&head, createNode("Chorizo"));
+    // appendNode(&head, createNode("Honey Badger"));
+    // appendNode(&head, createNode("Rabbit"));
+    // appendNodeAlt(&head, createNode("Dog"));
+    // appendNodeAlt(&head, createNode("Cat"));
+    prependNode(&head, createNode("Goldfish"));
+    prependNode(&head, createNode("Pig"));
+    // insertAlphabetically(&head, createNode("Spider"));
+    // insertAlphabetically(&head, createNode("Rhino"));
+    // insertAlphabetically(&head, createNode("Aardvark"));
+    // insertAlphabetically(&head, createNode("Badger"));
+    // insertAlphabetically(&head, createNode("Deer"));
+    // insertAlphabetically(&head, createNode("Elephant"));
     printList(&head);
     return 0;
 }

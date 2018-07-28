@@ -53,28 +53,65 @@ void appendNodeAlt(NODE **headRef, NODE *newNode)
     *tracer = newNode;
 }
 
+/**
+ * Insert a node into the list, in alphabetic order based on the `name` member
+ * variable.
+ *
+ * This function doesn't sort the list - it just inserts the new node at the
+ * first available position where the name of the following node is alphabetically
+ * greater.
+ * @param  headRef [description]
+ * @param  newNode [description]
+ * @return         [description]
+ */
+int insertAlphabetically(NODE **headRef, NODE *newNode)
+{
+    NODE **tracer = headRef;
+    // The variable `tracer` now holds the address of the head pointer, which in
+    // turn points to the head of the list - it holds the memory address of the
+    // first node if there is one, and `NULL` if there is not.
+    // At this point, `*tracer` is the address of the head `NODE` (or NULL). It
+    // is a `NODE *` to the first node in the list. NOTE: amending `*tracer`
+    // changes the head reference in the caller function, because you're
+    // amending the address held by `head`. This is the whole point of using the
+    // double pointer technique. Because this function receives an address of a
+    // pointer - a double pointer, or pointer-to-pointer - we can access that
+    // memory location - substituting the pointer to point to a different node
+    // as required by simply setting `*tracer` to the memory address of the
+    // required node.
+
+    while (*tracer && (strcmp((*tracer)->name, newNode->name) < 1)) {
+    // while (*tracer) {
+        printf("*tracer->name = %s\n", (*tracer)->name);
+        // set tracer to the address of the next node.
+        tracer = &(*tracer)->next;
+    }
+    // `tracer` now refers to the endpoint for insertion - `tracer` is a pointer
+    // to a pointer to the NODE after the new node's final inserted position.
+    // In other words, `tracer` contains the address of a pointer variable, which
+    // in turn contains the address of the NODE that the new node should be
+    // inserted before (or NULL if it's the last node in the list).
+    // De-referencing tracer provides the address of what should be the following
+    // node.
+    newNode->next = *tracer;
+
+    // First attempt: (*tracer)->next = newNode; this is wrong and will cause a
+    // segmentation fault in the case of the last element, since
+    // (*tracer)->next is NULL.
+    //
+    // `tracer` contains the address of the `next` member variable of the
+    // preceding node - which is a `NODE*` pointer, containing the address of the
+    // next node. By dereferencing this we can amend the node which this points
+    // to - it should be a pointer to the new node.
+    *tracer = newNode;
+
+    return 0;
+}
+
 void prependNode(NODE **head, NODE *newNode)
 {
     newNode->next = *head;
     *head = newNode;
-}
-
-int insertAlphabetically(NODE **headRef, NODE *newNode)
-{
-    NODE **tracer = headRef;
-    // `tracer` now holds the address of the head pointer, which in turn points
-    // to the head of the list. `*tracer` refers to the address of the head `NODE`.
-    // NOTE: amending `*tracer` changes the head reference, because you're
-    // amending the address held by `head`.
-
-    while (*tracer && (strcmp((*tracer)->name, newNode->name) < 1)) {
-        printf("*tracer->next->name = %s\n", (*tracer)->next->name);
-        // set tracer to the address of the next node.
-        tracer = &(*tracer)->next;
-    }
-    // tracer now refers to the endpoint for insertion
-    printf("current: %s\n", (*tracer)->name);
-    return 0;
 }
 
 void deleteNode(NODE *pNodeForDeletion)
