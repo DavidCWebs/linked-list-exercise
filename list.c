@@ -53,6 +53,14 @@ void appendNodeAlt(NODE **headRef, NODE *newNode)
     *tracer = newNode;
 }
 
+void appendNodeAlt2(NODE **headRef, NODE *newNode)
+{
+    NODE **tracer;
+    for (tracer = headRef; *tracer; tracer = &(*tracer)->next)
+        ;
+    *tracer = newNode;
+}
+
 /**
  * Insert a node into the list, in alphabetic order based on the `name` member
  * variable.
@@ -97,7 +105,8 @@ int insertAlphabetically(NODE **headRef, NODE *newNode)
 
     // First attempt: (*tracer)->next = newNode; this is wrong and will cause a
     // segmentation fault in the case of the last element, since
-    // (*tracer)->next is NULL.
+    // (*tracer)->next is NULL. You can't dereference a NULL pointer - it results
+    // in undefined behaviour.
     //
     // `tracer` contains the address of the `next` member variable of the
     // preceding node - which is a `NODE*` pointer, containing the address of the
@@ -114,10 +123,52 @@ void prependNode(NODE **head, NODE *newNode)
     *head = newNode;
 }
 
-void deleteNode(NODE *pNodeForDeletion)
+/**
+ * Delete a node.
+ * Find the node that immediately precedes the deletion candidate.
+ * Adjust previous node - it's next member variable should point to the deletion
+ * candidate's next member variable. Then free() the deletion candidate
+ */
+int deleteNode(NODE **ppHead, char *name)
 {
-    printf("%s\n", pNodeForDeletion->name);
+    NODE **tracer = ppHead;
+
+    if (strcmp((*tracer)->name, name) == 0) {
+        NODE *tmp = *tracer;
+        // reset head
+        *tracer = (*tracer)->next;
+        // Delete original
+        free(tmp);
+        return 0;
+    }
+    while (*tracer && (strcmp((*tracer)->next->name, name) != 0)) {
+        tracer = &(*tracer)->next;
+    }
+    if (!(*tracer)->next) {
+        printf("Looks like we went all the way through the list and couldn't find %s.\n", name);
+        printf("Nothing was deleted.\n");
+        return 0;
+    }
+    NODE *tmp = (*tracer)->next;
+    (*tracer)->next = (*tracer)->next->next;
+    free(tmp);
+    return 0;
 }
+
+NODE *findNode(NODE **ppHead, char *name)
+{
+    NODE **tracer = ppHead;
+    while (*tracer && (strcmp((*tracer)->name, name) != 0)) {
+        tracer = &(*tracer)->next;
+    }
+    if (!(*tracer)) {
+        printf("Looks like we went all the way through the list and couldn't find %s.\n", name);
+    } else {
+        printf("We've reached node %s\n", (*tracer)->name);
+    }
+    return *tracer;
+}
+
 void printList(NODE **ppHead)
 {
     NODE **tracer = ppHead;

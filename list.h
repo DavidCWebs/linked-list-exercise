@@ -9,9 +9,11 @@ typedef struct node
 } NODE;
 
 NODE *createNode(char *name);
+NODE *findNode(NODE **ppHead, char *name);
 void appendNode(NODE **head, NODE *newNode);
 void prependNode(NODE **head, NODE *newNode);
 void appendNodeAlt(NODE **head, NODE *newNode);
+void appendNodeAlt2(NODE **headRef, NODE *newNode);
 int insertAlphabetically(NODE **headRef, NODE *newNode);
-void deleteNode(NODE *pNodeForDeletion);
+int deleteNode(NODE **head, char *nameForDeletion);
 void printList(NODE **ppHead);
